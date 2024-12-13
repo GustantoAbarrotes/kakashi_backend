@@ -1,0 +1,67 @@
+# Build Folders (Build Results)
+bin/
+obj/
+
+# User-specific files
+*.user
+*.userosscache
+*.suo
+*.userprefs
+*.log
+
+# Windows Installer files
+*.cab
+*.msi
+*.msm
+*.msp
+
+# Windows image file caches
+Thumbs.db
+ehthumbs.db
+
+# ASP.NET Scaffolding
+ScaffoldingReadMe.txt
+
+# .NET Core / .NET 5+ files
+project.lock.json
+project.fragment.lock.json
+artifacts/
+
+# NUGET
+# The packages folder can be ignored because of the presence of NuGet.config.
+# If you have to store packages locally, this should be changed to your specific folder.
+# Uncomment if you want to ignore the global packages folder
+# .nuget/packages/
+
+# Windows Installer files
+*.cab
+*.msi
+*.msm
+*.msp
+
+# .vs folder
+.vs/
+
+# ASP.NET Core Web API temp files
+.vscode/
+
+# JetBrains Rider files
+.idea/
+
+# Node.js related (if using npm or yarn)
+node_modules/
+npm-debug.log
+yarn-error.log
+
+# User-specific files for Visual Studio for Mac
+.vscode/
+
+# .NET Core global tool configuration
+.dotnet/
+
+# VS for Mac configuration files
+.vscode/
+.idea/
+
+repository_layer/migrations/
+Persistence
