@@ -263,7 +263,7 @@ namespace RepositoryLayer.Repositories.Supplier
                             cmd.Parameters.Add(new OracleParameter(":EMAIL", OracleDbType.Varchar2)).Value = $"%{email.ToUpper()}%";
                     }
                     #endregion
-
+                    await oConn.OpenAsync();
                     using (var reader = await cmd.ExecuteReaderAsync())
                     {
                         var supplier = new SupplierEntity();

@@ -1,0 +1,4 @@
+wsl -d Ubuntu-20.04
+	comando windows para levantar ubuntu y entrar a la shell
+docker logs -f oracle-db
+	muestra la actividad del contenedor oracle-db
