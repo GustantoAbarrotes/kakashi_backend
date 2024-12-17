@@ -19,6 +19,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Elementos de la solución",
 	ProjectSection(SolutionItems) = preProject
 		.gitignore = .gitignore
 		comandos.txt = comandos.txt
+		querys.sql = querys.sql
 	EndProjectSection
 EndProject
 Global

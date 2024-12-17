@@ -38,6 +38,7 @@ artifacts/
 *.msi
 *.msm
 *.msp
+*.sql
 
 # .vs folder
 .vs/
