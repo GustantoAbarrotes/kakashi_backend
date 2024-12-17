@@ -5,6 +5,7 @@ using RepositoryLayer.Repositories.Product;
 using RepositoryLayer.Repositories.Supplier;
 using ServiceLayer.Product;
 using ServiceLayer.Supplier;
+using ServiceLayer.Version;
 
 namespace ServiceLayer
 {
@@ -20,6 +21,7 @@ namespace ServiceLayer
             //services
             services.AddScoped<SupplierService>();
             services.AddScoped<ProductService>();
+            services.AddScoped<VersionService>();
         }
     }
 }

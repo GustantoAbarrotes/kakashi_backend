@@ -15,4 +15,8 @@
     <ProjectReference Include="..\repository_layer\repository_layer.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="version\mappers\" />
+  </ItemGroup>
+
 </Project>
