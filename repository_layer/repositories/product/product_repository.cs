@@ -42,7 +42,8 @@ namespace RepositoryLayer.Repositories.Product
                             obj.FormaVentaCB = reader[i] == DBNull.Value ? string.Empty : reader.GetString(i); i++;
                             obj.Caja = reader[i] == DBNull.Value ? string.Empty : reader.GetString(i); i++;
                             obj.Pieza = reader[i] == DBNull.Value ? string.Empty : reader.GetString(i); i++;
-                            obj.Descripcion = reader[i] == DBNull.Value ? string.Empty : reader.GetString(i);
+                            obj.Descripcion = reader[i] == DBNull.Value ? string.Empty : reader.GetString(i); i++;
+                            obj.Precio = reader[i] == DBNull.Value ? 0 : Convert.ToDecimal(reader.GetString(i));
 
                             datos.Add(obj);
                             obj = new ProductEntity();
@@ -67,7 +68,7 @@ namespace RepositoryLayer.Repositories.Product
                 var query = new StringBuilder();
                 query.AppendLine("SELECT ART.*");
                 query.AppendLine("FROM ARTICULOS ART ");
-                query.AppendLine("WHERE ART.CODIGOPRODUCTO=:ID");
+                query.AppendLine("WHERE ART.CODIGOBARRA=:ID");
                 #endregion
                 using (var oConnection = await _dbManager.GetConnection())
                 using (var oCommand = new OracleCommand(query.ToString(), oConnection))
@@ -84,7 +85,8 @@ namespace RepositoryLayer.Repositories.Product
                             obj.FormaVentaCB = reader[i] == DBNull.Value ? string.Empty : reader.GetString(i); i++;
                             obj.Caja = reader[i] == DBNull.Value ? string.Empty : reader.GetString(i); i++;
                             obj.Pieza = reader[i] == DBNull.Value ? string.Empty : reader.GetString(i); i++;
-                            obj.Descripcion = reader[i] == DBNull.Value ? string.Empty : reader.GetString(i);
+                            obj.Descripcion = reader[i] == DBNull.Value ? string.Empty : reader.GetString(i); i++;
+                            obj.Precio = reader[i] == DBNull.Value ? 0 : Convert.ToDecimal(reader.GetString(i)); i++;
                         }
                         reader.Close(); await oConnection.CloseAsync(); query.Clear();
                     }
