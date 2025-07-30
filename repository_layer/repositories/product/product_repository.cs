@@ -43,7 +43,7 @@ namespace RepositoryLayer.Repositories.Product
                             obj.Caja = reader[i] == DBNull.Value ? string.Empty : reader.GetString(i); i++;
                             obj.Pieza = reader[i] == DBNull.Value ? string.Empty : reader.GetString(i); i++;
                             obj.Descripcion = reader[i] == DBNull.Value ? string.Empty : reader.GetString(i); i++;
-                            obj.Precio = reader[i] == DBNull.Value ? 0 : Convert.ToDecimal(reader.GetString(i));
+                            obj.Precio = reader[i] == DBNull.Value ? 0 : Convert.ToDouble(reader.GetString(i));
 
                             datos.Add(obj);
                             obj = new ProductEntity();
@@ -59,21 +59,36 @@ namespace RepositoryLayer.Repositories.Product
             }
         }
 
-        public async Task<ProductEntity> GetById(string id)
+        public async Task<ProductEntity> GetByBarCode(string barCode)
         {
             ProductEntity obj = null;
             try
             {
                 #region querySql
                 var query = new StringBuilder();
-                query.AppendLine("SELECT ART.*");
-                query.AppendLine("FROM ARTICULOS ART ");
-                query.AppendLine("WHERE ART.CODIGOBARRA=:ID");
+                //query.AppendLine("SELECT ART.*");
+                //query.AppendLine("FROM ARTICULOS ART ");
+                //query.AppendLine("WHERE ART.CODIGOBARRA=:ID");
+                query.AppendLine("SELECT A.CODIGO_ARTICULO, D.CODIGO_BARRAS");
+                query.AppendLine("");
+                query.AppendLine(",A.DESCRIPCION || ' ' || TRIM(B.DES_TABLAS) AS NOMBRE");
+                query.AppendLine(",CASE WHEN D.FORMAVENTA = 'W' THEN ROUND(A.PRECIO1/A.NUMUNIDADES, 2) ELSE A.PRECIO1 END PRECIO");
+                query.AppendLine("FROM ARTICULOS A");
+                query.AppendLine("INNER JOIN TABLAS B");
+                query.AppendLine("    ON B.TIPO_TABLAS=5");
+                query.AppendLine("    AND B.CVE_TABLAS=A.CVE_MEDIDA");
+                query.AppendLine("INNER JOIN SUBCODIGOS_HIJO C");
+                query.AppendLine("    ON C.CVE_SUBCODIGO_PADRE = A.SUBCODIGO_ARTICULO");
+                query.AppendLine("INNER JOIN CODIGOBARRAS D");
+                query.AppendLine("    ON D.CODIGO_ARTICULO = A.CODIGO_ARTICULO");
+                query.AppendLine("    AND D.CVE_SUBCODIGO_PADRE = C.CVE_SUBCODIGO_PADRE");
+                query.AppendLine("    AND D.CVE_SUBCODIGO_HIJO = C.CVE_SUBCODIGO_HIJO");
+                query.AppendLine("WHERE A.ACTIVO = 'A' AND D.CODIGO_BARRAS=:CODIGO_BARRAS");
                 #endregion
                 using (var oConnection = await _dbManager.GetConnection())
                 using (var oCommand = new OracleCommand(query.ToString(), oConnection))
                 {
-                    oCommand.Parameters.Add(new OracleParameter(":ID", OracleDbType.Varchar2)).Value = id;
+                    oCommand.Parameters.Add(new OracleParameter(":CODIGO_BARRAS", OracleDbType.Varchar2)).Value = barCode;
                     await oConnection.OpenAsync();
                     using (var reader = await oCommand.ExecuteReaderAsync())
                     {
@@ -82,11 +97,11 @@ namespace RepositoryLayer.Repositories.Product
                             obj = new ProductEntity(); var i = 0;
                             obj.CodigoProducto = reader[i] == DBNull.Value ? string.Empty : reader.GetString(i); i++;
                             obj.CodigoBarra = reader[i] == DBNull.Value ? string.Empty : reader.GetString(i); i++;
-                            obj.FormaVentaCB = reader[i] == DBNull.Value ? string.Empty : reader.GetString(i); i++;
-                            obj.Caja = reader[i] == DBNull.Value ? string.Empty : reader.GetString(i); i++;
-                            obj.Pieza = reader[i] == DBNull.Value ? string.Empty : reader.GetString(i); i++;
+                            //obj.FormaVentaCB = reader[i] == DBNull.Value ? string.Empty : reader.GetString(i); i++;
+                           // obj.Caja = reader[i] == DBNull.Value ? string.Empty : reader.GetString(i); i++;
+                            //obj.Pieza = reader[i] == DBNull.Value ? string.Empty : reader.GetString(i); i++;
                             obj.Descripcion = reader[i] == DBNull.Value ? string.Empty : reader.GetString(i); i++;
-                            obj.Precio = reader[i] == DBNull.Value ? 0 : Convert.ToDecimal(reader.GetString(i)); i++;
+                            obj.Precio = reader[i] == DBNull.Value ? 0 : Convert.ToDouble(reader.GetString(i)); i++;
                         }
                         reader.Close(); await oConnection.CloseAsync(); query.Clear();
                     }

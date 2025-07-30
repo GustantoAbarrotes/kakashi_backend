@@ -17,9 +17,9 @@ namespace ServiceLayer.Product
         {
             return await _rep.GetAll();
         }
-        public async Task<ProductEntity> GetById(string id)
+        public async Task<ProductEntity> GetByBarCode(string barCode)
         {
-            return await _rep.GetById(id);
+            return await _rep.GetByBarCode(barCode);
         }
     }
 }

@@ -35,12 +35,12 @@ namespace Api.Controllers.Product
         }
 
         [AllowAnonymous]
-        [HttpGet("get-by-id/{id}")]
-        public async Task<IActionResult> GetById(string id)
+        [HttpGet("get-by-id/{barCode}")]
+        public async Task<IActionResult> GetByBarCode(string barCode)
         {
             try
             {
-                var prod = await _service.GetById(id);
+                var prod = await _service.GetByBarCode(barCode);
                 if (prod is null)
                     return StatusCode(204, ""); // 204 No Content 
                 return Ok(prod);

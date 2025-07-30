@@ -8,6 +8,6 @@
         public string Caja { get; set; }
         public string Pieza { get; set; }
         public string Descripcion { get; set; }
-        public decimal Precio { get; set; }
+        public double Precio { get; set; }
     }
 }
