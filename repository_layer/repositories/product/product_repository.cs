@@ -3,8 +3,6 @@ using RepositoryLayer.Connection;
 using RepositoryLayer.Repositories.Product.Entity;
 using System;
 using System.Collections.Generic;
-using System.Data;
-using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -72,7 +70,16 @@ namespace RepositoryLayer.Repositories.Product
                 query.AppendLine("SELECT A.CODIGO_ARTICULO, D.CODIGO_BARRAS");
                 query.AppendLine("");
                 query.AppendLine(",A.DESCRIPCION || ' ' || TRIM(B.DES_TABLAS) AS NOMBRE");
-                query.AppendLine(",CASE WHEN D.FORMAVENTA = 'W' THEN ROUND(A.PRECIO1/A.NUMUNIDADES, 2) ELSE A.PRECIO1 END PRECIO");
+                query.AppendLine(",ROUND(CASE");
+                query.AppendLine("        WHEN A.FORMAVENTA = 'W' AND A.CVE_IVA = 2");
+                query.AppendLine("            THEN (A.PRECIO1 / A.NUMUNIDADES) * 1.16");
+                query.AppendLine("        WHEN A.FORMAVENTA = 'W' AND A.CVE_IVA < 2");
+                query.AppendLine("            THEN A.PRECIO1 / A.NUMUNIDADES");
+                query.AppendLine("        WHEN A.FORMAVENTA <> 'W' AND A.CVE_IVA = 2");
+                query.AppendLine("            THEN (A.PRECIO1 / A.NUMUNIDADES) * 1.16");
+                query.AppendLine("        ELSE A.PRECIO1");
+                query.AppendLine("    END, 5) AS Precio_Final");
+                //query.AppendLine(",CASE WHEN D.FORMAVENTA = 'W' THEN ROUND(A.PRECIO1/A.NUMUNIDADES, 2) ELSE A.PRECIO1 END PRECIO");
                 query.AppendLine("FROM ARTICULOS A");
                 query.AppendLine("INNER JOIN TABLAS B");
                 query.AppendLine("    ON B.TIPO_TABLAS=5");
