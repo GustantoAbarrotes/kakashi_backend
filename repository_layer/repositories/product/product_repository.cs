@@ -74,7 +74,7 @@ namespace RepositoryLayer.Repositories.Product
                 query.AppendLine("           THEN (A.PRECIO1 / A.NUMUNIDADES) * 1.16");
                 query.AppendLine("       WHEN D.FORMAVENTA = 'W' AND A.CVE_IVA < 2");
                 query.AppendLine("           THEN A.PRECIO1 / A.NUMUNIDADES");
-                query.AppendLine("       WHEN D.FORMAVENTA <> 'W' AND A.CVE_IVA = 2");
+                query.AppendLine("       WHEN (D.FORMAVENTA <> 'W' OR D.FORMAVENTA IS NULL) AND A.CVE_IVA = 2");
                 query.AppendLine("           THEN (A.PRECIO1) * 1.16");
                 query.AppendLine("       ELSE A.PRECIO1");
                 query.AppendLine("    END, 5) AS Precio_Final");
