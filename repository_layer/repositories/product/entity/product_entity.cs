@@ -5,9 +5,9 @@
         public string CodigoProducto { get; set; }
         public string CodigoBarra { get; set; }
         public string FormaVentaCB { get; set; }
-        public string Caja { get; set; }
-        public string Pieza { get; set; }
         public string Descripcion { get; set; }
         public double Precio { get; set; }
+        public string SubCodigoPadre { get; set; }
+        public string SubCodigoHijo { get; set; }
     }
 }

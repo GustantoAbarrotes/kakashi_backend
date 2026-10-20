@@ -21,5 +21,9 @@ namespace ServiceLayer.Product
         {
             return await _rep.GetByBarCode(barCode);
         }
+        public async Task<List<ProductEntity>> FindByText(string text, int page, int sizePage)
+        {
+            return await _rep.FindByText(text, page, sizePage);
+        }
     }
 }

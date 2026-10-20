@@ -17,8 +17,8 @@ namespace ServiceLayer.Product.Mappers
             CodigoProducto = entity.CodigoProducto,
             Descripcion = entity.Descripcion,
             CodigoBarra= entity.CodigoBarra,
-            Caja = string.Empty,
-            Pieza = string.Empty,
+            SubCodigoHijo = string.Empty,
+            SubCodigoPadre = string.Empty,
             FormaVentaCB = string.Empty
         };
     }
