@@ -6,20 +6,37 @@ namespace ServiceLayer.Product.Mappers
 {
     public static class ProductMapper
     {
-        public static ProductResponseDTO ToDTO(this ProductEntity entity) => new ProductResponseDTO()
+        public static ProductResponseDTO ToResponseDTO(this ProductEntity entity)
         {
-            CodigoProducto = entity?.CodigoProducto,
-            Descripcion = entity?.Descripcion
-        };
+            if (entity == null)
+                throw new ArgumentNullException(nameof(entity));
 
-        public static ProductEntity ToEntity(this ProductRequestDTO entity) => new ProductEntity()
+            return new ProductResponseDTO
+            {
+                CodigoProducto = entity.CodigoProducto,
+                Descripcion = entity.Descripcion,
+                CodigoBarra = entity.CodigoBarra,
+                SubCodigoHijo = entity.SubCodigoHijo,
+                SubcodigoPadre = entity.SubCodigoPadre,
+                FormaVenta = entity.FormaVentaCB,
+                Precio = entity.Precio
+            };
+        }
+
+        public static ProductEntity ToEntity(this ProductRequestDTO dto)
         {
-            CodigoProducto = entity.CodigoProducto,
-            Descripcion = entity.Descripcion,
-            CodigoBarra= entity.CodigoBarra,
-            SubCodigoHijo = string.Empty,
-            SubCodigoPadre = string.Empty,
-            FormaVentaCB = string.Empty
-        };
+            if (dto == null)   
+                throw new ArgumentNullException(nameof(dto));
+            
+            return new ProductEntity
+            {
+                CodigoProducto = dto.CodigoProducto,
+                Descripcion = dto.Descripcion,
+                CodigoBarra = dto.CodigoBarra,
+                SubCodigoHijo = dto.SubCodigoHijo,
+                SubCodigoPadre = dto.SubCodigoPadre,
+                FormaVentaCB = dto.FormaVenta
+            };
+        }
     }
 }

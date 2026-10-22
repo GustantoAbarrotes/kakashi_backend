@@ -3,6 +3,8 @@ using RepositoryLayer.Connection;
 using RepositoryLayer.Repositories.Product.Entity;
 using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Reflection.PortableExecutable;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -54,6 +56,8 @@ namespace RepositoryLayer.Repositories.Product
                 using (var oConnection = await _dbManager.GetConnection())
                 using (var oCommand = new OracleCommand(query.ToString(), oConnection))
                 {
+                    if (oConnection.State == ConnectionState.Open)
+                        await oConnection.CloseAsync();
                     await oConnection.OpenAsync();
                     using (var reader = await oCommand.ExecuteReaderAsync())
                     {
@@ -119,6 +123,8 @@ namespace RepositoryLayer.Repositories.Product
                 using (var oCommand = new OracleCommand(query.ToString(), oConnection))
                 {
                     oCommand.Parameters.Add(new OracleParameter(":CODIGO_BARRAS", OracleDbType.Varchar2)).Value = barCode;
+                    if (oConnection.State == ConnectionState.Open)
+                        await oConnection.CloseAsync();
                     await oConnection.OpenAsync();
                     using (var reader = await oCommand.ExecuteReaderAsync())
                     {
@@ -188,6 +194,8 @@ namespace RepositoryLayer.Repositories.Product
                     oCommand.Parameters.Add(new OracleParameter("TEXT", OracleDbType.Varchar2)).Value = text.Trim().ToUpperInvariant();
                     oCommand.Parameters.Add(new OracleParameter("P_OFFSET", OracleDbType.Int32)).Value = offset;
                     oCommand.Parameters.Add(new OracleParameter("P_PAGE_SIZE", OracleDbType.Int32)).Value = sizePage;
+                    if (oConnection.State == ConnectionState.Open)
+                        await oConnection.CloseAsync();
                     await oConnection.OpenAsync();
                     using (var reader = await oCommand.ExecuteReaderAsync())
                     {
@@ -215,6 +223,62 @@ namespace RepositoryLayer.Repositories.Product
                 throw ex;
             }
         }
-
+        public async Task<bool> InsertBarcode(BarcodeEntity entity, string usuario)
+        {
+            try
+            {
+                var query = new StringBuilder();
+                #region querySql
+                query.AppendLine("INSERT INTO CODIGOBARRAS (");
+                query.AppendLine("    CODIGO_BARRAS,");
+                query.AppendLine("    CODIGO_ARTICULO,");
+                query.AppendLine("    FORMAVENTA,");
+                query.AppendLine("    CVE_SUBCODIGO_PADRE,");
+                query.AppendLine("    CVE_SUBCODIGO_HIJO,");
+                query.AppendLine("    CREADOPOR,");
+                query.AppendLine("    CREADOFECHA,");
+                query.AppendLine("    MODIFICADOPOR,");
+                query.AppendLine("    MODIFICADOFECHA");
+                query.AppendLine(") VALUES (");
+                query.AppendLine("    :p_codigo_barras,");
+                query.AppendLine("    :p_codigo_articulo,");
+                query.AppendLine("    :p_formaventa,");
+                query.AppendLine("    :p_cve_subcodigo_padre,");
+                query.AppendLine("    :p_cve_subcodigo_hijo,");
+                query.AppendLine("    :p_creadopor,");
+                query.AppendLine("    SYSDATE,");
+                query.AppendLine("    NULL,");
+                query.AppendLine("    NULL");
+                query.AppendLine(")");
+                #endregion
+                using (var oConnection = await _dbManager.GetConnection())
+                using (var cmd = new OracleCommand(query.ToString(), oConnection))
+                {
+                    cmd.BindByName = true;
+                    #region paremeters sql
+                    cmd.Parameters.Add("p_codigo_barras", OracleDbType.Varchar2).Value = entity.CodigoBarra;
+                    cmd.Parameters.Add("p_codigo_articulo", OracleDbType.Varchar2).Value = entity.CodigoProducto;
+                    cmd.Parameters.Add("p_formaventa", OracleDbType.Varchar2).Value = entity.FormaVentaCB;
+                    cmd.Parameters.Add("p_cve_subcodigo_padre", OracleDbType.Varchar2).Value = entity.SubCodigoPadre;
+                    cmd.Parameters.Add("p_cve_subcodigo_hijo", OracleDbType.Varchar2).Value = entity.SubCodigoHijo;
+                    cmd.Parameters.Add("p_creadopor", OracleDbType.Varchar2).Value = usuario;
+                    #endregion
+                    if (oConnection.State == ConnectionState.Open)
+                        await oConnection.CloseAsync();                    
+                    await oConnection.OpenAsync();
+                    var res = (await cmd.ExecuteNonQueryAsync()) > 0;
+                    cmd.Dispose(); oConnection.Close(); query.Clear();
+                    return res;
+                }
+            }
+            catch (OracleException ex) when (ex.Number == 1)
+            {
+                throw new InvalidOperationException("El código de barras ya existe.");
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
     }
 }
